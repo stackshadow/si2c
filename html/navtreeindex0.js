@@ -1,0 +1,23 @@
+var NAVTREEINDEX0 =
+{
+"group__si2c__config.html":[1,3],
+"group__si2c__config.html#ga2300ad85c6051fe95d339d15afba4866":[1,3,0],
+"group__si2c__config.html#ga362311466cfc87f2cbedcdd4d20242f4":[1,3,2],
+"group__si2c__config.html#ga57305e3349798d2dc9cebbe3609d4b58":[1,3,6],
+"group__si2c__config.html#ga6fb3620046931abeee8bc88221fb6862":[1,3,1],
+"group__si2c__config.html#ga8b068985bf15e6a3e5dcb2d32cf2d9dc":[1,3,4],
+"group__si2c__config.html#ga9da40bd8498955ab0fc43c868f8f8655":[1,3,3],
+"group__si2c__config.html#gadd3e691f07b93776cdcf99bd3ea454dd":[1,3,5],
+"group__si2c__main.html":[1,1],
+"group__si2c__main.html#ga58ce89f95bc27cd3632db324638c9054":[1,1,1],
+"group__si2c__main.html#gaaabd7ce3fa626dc31d8620cd4ce6f53e":[1,1,2],
+"group__si2c__main.html#gae758eb82f7e854fb5980c5fda0689337":[1,1,0],
+"group__si2c__slave.html":[1,2],
+"group__si2c__slave.html#gaab97bdc75a96b6ba02d9d7d77004472b":[1,2,0],
+"group__si2c__slave.html#gad052ab3b065c8986e414b7f753b70de5":[1,2,1],
+"group__si2c__slave__example.html":[1,0],
+"index.html":[],
+"modules.html":[1],
+"pages.html":[],
+"todo.html":[0]
+};
