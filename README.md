@@ -1,4 +1,4 @@
 si2c
 ====
 
-Software based I²C library for AVR's atmega
+Software based I²C library ( I²C-Slave ) for AVR's atmega
