@@ -1,0 +1,55 @@
+#Copyright (C) 2014 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
+#
+#This file is part of si2c
+#
+#si2c is free software: you can redistribute it and/or modify
+#it under the terms of the GNU Lesser General Public License as published by
+#the Free Software Foundation, either version 3 of the License.
+#
+#si2c is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU Lesser General Public License for more details.
+#
+#You should have received a copy of the GNU Lesser General Public License
+#along with si2c.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# Variables
+# SOURCEDIR: Directory of sources
+
+PROJECT_NAME			= "si2c"
+PROJECT_BRIEF			= "Software I2C-Slave-Library for AVR's microcontroller"
+OUTPUT_DIRECTORY		= "../"
+OUTPUT_LANGUAGE			= "English"
+INTERNAL_DOCS 			= NO
+
+# Build related
+HIDE_UNDOC_MEMBERS		= YES
+SORT_MEMBER_DOCS		= NO
+
+# File handling
+FILE_PATTERNS = *.c *.h *.mk
+EXTENSION_MAPPING = mk=C
+
+# Input
+INPUT = 		mainpage.h \
+				$(SOURCEDIR)/si2cSlaveExample.c \
+				$(SOURCEDIR)/lib/si2c/si2c.h \
+				$(SOURCEDIR)/lib/si2c/si2cSlave.h \
+				$(SOURCEDIR)/lib/si2c/si2c_config.h
+EXAMPLE_PATH =	$(SOURCEDIR)/
+
+# Output
+REPEAT_BRIEF = NO
+CALL_GRAPH = YES
+INLINE_SOURCES = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION = YES
+REFERENCES_LINK_SOURCE = YES
+
+# HTML
+TOC_EXPAND = YES
+GENERATE_TREEVIEW = YES
+SHOW_FILES = NO
+TREEVIEW_WIDTH = 250
