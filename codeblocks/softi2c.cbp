@@ -35,6 +35,15 @@
 				<Option type="4" />
 				<Option compiler="avr-gcc" />
 			</Target>
+			<Target title="Interrupt">
+				<Option type="4" />
+				<Option compiler="avr-gcc" />
+				<Compiler>
+					<Add option="-mmcu=atmega8" />
+					<Add option="-O" />
+					<Add option="-print-file-name=include" />
+				</Compiler>
+			</Target>
 		</Build>
 		<VirtualTargets>
 			<Add alias="Release and Upload" targets="Release;Upload;" />
@@ -44,39 +53,51 @@
 		</Compiler>
 		<Unit filename="../doc/si2c/source/doxyfile">
 			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Unit filename="../doc/si2c/source/mainpage.h">
 			<Option target="Release" />
-		</Unit>
-		<Unit filename="../lib/si2c/Makefile">
-			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Unit filename="../lib/si2c/si2c.c">
 			<Option compilerVar="CC" />
 			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Unit filename="../lib/si2c/si2c.h">
 			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Unit filename="../lib/si2c/si2cSlave.c">
 			<Option compilerVar="CC" />
 			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Unit filename="../lib/si2c/si2cSlave.h">
 			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Unit filename="../lib/si2c/si2cSlave.mk">
 			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Unit filename="../lib/si2c/si2c_config.h">
 			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Unit filename="../si2c.make">
 			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Unit filename="../si2cSlaveExample.c">
 			<Option compilerVar="CC" />
 			<Option target="Release" />
+			<Option target="Interrupt" />
+		</Unit>
+		<Unit filename="../si2cSlaveExampleInterrupt.c">
+			<Option compilerVar="CC" />
+			<Option target="Release" />
+			<Option target="Interrupt" />
 		</Unit>
 		<Extensions>
 			<code_completion />

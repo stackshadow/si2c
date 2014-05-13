@@ -61,6 +61,7 @@ typedef enum {
 	si2cState_READY,
 	si2cState_RUN,
 	si2cState_RS, 		// repeated start
+	si2cState_STOP
 }
 si2cState_t;
 

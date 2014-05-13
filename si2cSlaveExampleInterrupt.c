@@ -21,14 +21,13 @@ This file is an example on how to use the si2c-library in you Project
 /**
 @ingroup si2c_slave_example
 @{
-@anchor si2c_slave_example_basic
+@anchor si2c_slave_example_interrupt
 
 ## Basic example
 
-This basic example show how to use the si2c library without any special Hardware \n
-no interrupt, no hardware twi is needed.
+This example show how to use the si2c library with interrupt.
 
-@include si2cSlaveExample.c
+@include si2cSlaveExampleInterrupt.c
 
 Here is the makefile for this example:
 @include si2c.make
@@ -44,6 +43,8 @@ Here is the makefile for this example:
 #include "lib/si2c/si2c.h"
 #include "lib/si2c/si2cSlave.h"
 
+#include <avr/interrupt.h>
+
 
 main(){
 
@@ -54,21 +55,22 @@ main(){
 // Init the BUS
 	si2cInit();
 
+// Enable Interrupt for INT1
+	GICR = 0<<INT0 | 1<<INT1;
+	MCUCR = 0<<ISC01 | 0<<ISC00;
+
+// Wait for I2C-BUS is ready
+	while( si2cState != si2cState_READY ){
+		si2cWaitInitCheck();
+	}
+
+// enable interruot
+	sei();
+
 // Infinite loop
 	while(1){
-
-	// Wait for BUS is ready
-		si2cWaitInitCheck();
-
-	// Check if START occure
-		si2cSlaveWaitForStart();
-
-	// Handle Slave-communication if START occure
-	// this function is BLOCK you program !
-		si2cSlave( 0x04 );
-
 	// If Register 1 ( 0x01 in HEX ) is set to 0x01, light up the LED
-		if( si2cRegister[1] == 0x01 ){
+		if( si2cRegister[1] == 1 ){
 			CLR( PORT, C, 5 );
 		} else {
 			SET( PORT, C, 5 );
@@ -78,3 +80,22 @@ main(){
 
 }
 
+ISR(INT1_vect){
+
+// Disable Interrupt
+	cli();
+
+// Check if START occure
+	si2cSlaveWaitForStart();
+
+// Handle Slave-communication if START occure
+// this function is BLOCK you program !
+	si2cSlave( 0x05 );
+
+	#ifdef SI2C_USE_STATUS
+		SET( PORT, SI2C_STATUS_PORT, SI2C_STATUS_PIN );
+	#endif // SI2C_USE_STATUS
+
+// Enable Interrupt
+	sei();
+}

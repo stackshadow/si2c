@@ -35,6 +35,7 @@ EXTENSION_MAPPING = mk=C
 # Input
 INPUT = 		mainpage.h \
 				$(SOURCEDIR)/si2cSlaveExample.c \
+				$(SOURCEDIR)/si2cSlaveExampleInterrupt.c \
 				$(SOURCEDIR)/lib/si2c/si2c.h \
 				$(SOURCEDIR)/lib/si2c/si2cSlave.h \
 				$(SOURCEDIR)/lib/si2c/si2c_config.h

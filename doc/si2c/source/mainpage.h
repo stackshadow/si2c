@@ -60,3 +60,16 @@ make -f si2c.make Release
 
 */
 
+/**
+@defgroup si2c_slave_example EXAMPLE for si2c as slave
+@{
+@anchor si2c_slave_example
+
+This examples shows you on how to use the si2c in you Project. \n
+First you need to extract the lib/si2c directory to you project that the makefile can find it. \n
+Also take a look inside the Makefile to get a guess on how to write an makefile with si2c support
+
+
+
+@}
+*/

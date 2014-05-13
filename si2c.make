@@ -15,24 +15,27 @@ include lib/si2c/si2cSlave.mk
 %.o: %.c
 	avr-gcc -g -Os -mmcu=$(CPU) -DF_CPU=$(F_CPU) -c $< -o $@
 
-# This is the elf-file for the atmega
-firmware.elf: $(Objects) $(si2cSlave)
-	avr-gcc -g -mmcu=$(CPU) $(Objects) $(si2cSlave) -o $@
 
-firmware.hex: firmware.elf
+firmware.hex: $(si2cSlave)
+	avr-gcc -g -mmcu=$(CPU) `ls *.o` $(si2cSlave) -o firmware.elf
 	avr-objcopy -j .text -j .data -O ihex firmware.elf $@
 
 Upload:
 	sudo /usr/bin/avrdude -P usb -c avrispv2 -p m8 -e -U flash:w:firmware.hex
 
-
-# Codeblocks targets
-
-Release: firmware.hex
-cleanRelease: si2cclean
+clean:
 	@rm -f -v ./*.elf
 	@rm -f -v ./*.hex
 	@rm -f -v ./*.o
+
+
+# Codeblocks targets
+
+Release: si2cSlaveExample.o firmware.hex
+cleanRelease: si2cclean clean
+
+Interrupt: si2cSlaveExampleInterrupt.o firmware.hex
+cleanInterrupt: si2cclean clean
 
 docs:
 	export SOURCEDIR="../../.." && \
