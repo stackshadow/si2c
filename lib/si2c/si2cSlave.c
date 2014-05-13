@@ -25,6 +25,7 @@ along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 #include "si2cSlave.h"
 
 
+
 void				si2cSlaveWaitForStart(){
 	// Check if Start condition occure
 	if( si2cState == si2cState_READY ){
@@ -66,7 +67,7 @@ void				si2cSlaveReadByte(){
 		// Stopp
 			if( ! si2cBit ){
 				if( IS_SDA ){
-					si2cState = si2cState_READY;
+					si2cState = si2cState_STOP;
 					return;
 				}
 			}
@@ -124,16 +125,14 @@ void				si2cSlaveSendACK(){
 void				si2cSlave( unsigned char Address ){
 	if( si2cState != si2cState_RUN ) return;
 
-// Block until i2c is finished
-	while(1){
 
-	// Read 7 bits
+// Block until i2c is finished
+	while( si2cState != si2cState_STOP ){
+
+	// Read a full byte
 		si2cSlaveReadByte();
-		if( si2cState == si2cState_RS ){ // This occures if address was not okay
-			si2cState = si2cState_RUN;
-			return;
-		}
-		if( si2cState != si2cState_RUN) return;
+		if( si2cState == si2cState_STOP ){ continue; }
+
 
 	// RW ?
 	// 1 Master will read
@@ -150,6 +149,7 @@ void				si2cSlave( unsigned char Address ){
 		si2cByte = si2cByte >> 1;
 
 
+	// Check Address
 		if( si2cByte == Address ){
 		// Send ACK
 			si2cSlaveSendACK(1);
@@ -159,15 +159,6 @@ void				si2cSlave( unsigned char Address ){
 
 			// Read the register which come from the master
 				si2cSlaveReadByte();
-				if( si2cState == si2cState_READY ){
-					si2cDirection = si2cDirection_NO;
-					return;
-				}
-				if( si2cState == si2cState_RS ){
-					si2cDirection = si2cDirection_NO;
-					si2cState = si2cState_RUN;
-					return;
-				}
 				si2cSlaveSendACK(1);
 
 			// Save register Position
@@ -176,16 +167,16 @@ void				si2cSlave( unsigned char Address ){
 
 			// Read the next byte
 				si2cSlaveReadByte();
-				if( si2cState == si2cState_READY ){
-					si2cDirection = si2cDirection_NO;
-					return;
-				}
-				if( si2cState == si2cState_RS ){
-					si2cDirection = si2cDirection_NO;
-					si2cState = si2cState_RUN;
-					return;
-				}
+				if( si2cState == si2cState_STOP ) continue;
+				if( si2cState == si2cState_RS ){ si2cState = si2cState_RUN; continue; }
 				si2cSlaveSendACK(1);
+
+			// Call user Function
+				if( si2cSlaveRegisterPreWrite != 0 ){
+					if( si2cSlaveRegisterPreWrite( si2cRegisterIndex, si2cByte ) == 0 ){
+						continue;
+					}
+				}
 
 			// Write it to the register
 				si2cRegister[si2cRegisterIndex] = si2cByte;
@@ -195,6 +186,13 @@ void				si2cSlave( unsigned char Address ){
 
 		// Read
 			if( si2cDirection == si2cDirection_READ ){
+
+			// Call user Function
+				if( si2cSlaveRegisterPreRead != 0 ){
+					if( si2cSlaveRegisterPreRead( si2cRegisterIndex ) == 0 ){
+						continue;
+					}
+				}
 
 			// Send a byte to Master
 				si2cSlaveSendByte(si2cRegister[si2cRegisterIndex]);
@@ -211,6 +209,9 @@ void				si2cSlave( unsigned char Address ){
 
 
 	}
+
+	si2cState = si2cState_READY;
+	si2cDirection = si2cDirection_NO;
 
 }
 

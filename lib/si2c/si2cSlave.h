@@ -25,7 +25,30 @@ This functions handle communication as a slave.
 */
 
 
+/** @ingroup si2c_slave
+@~english
+@brief User defined function: Write request from Master
 
+This function get called if:
+- the Master set already the register
+- the next byte was readed from the Master
+- before this byte get written to the requested register
+
+If you return this function with 0, the byte get not written to the register. \n
+Return everything else, and the byte get written to the register
+*/
+int					(*si2cSlaveRegisterPreWrite )( unsigned char Register, unsigned char WrittenByte );      // Function pointer
+
+/** @ingroup si2c_slave
+@~english
+@brief User defined function: Read request from Master
+
+This function get called if:
+- the Master request an read
+
+If you return this function with 0, the requested register is not send to the master
+*/
+int					(*si2cSlaveRegisterPreRead )( unsigned char Register );      // Function pointer
 
 
 /** @ingroup si2c_slave
