@@ -44,11 +44,15 @@ You need to include this header into you project
 #define CONF_SI2C_CLK 4			/**< The SCL-Pin on CONF_SI2C_PORT */
 #define CONF_SI2C_SDA 3			/**< The SDA-Pin on CONF_SI2C_PORT */
 
+// Address of our device
+#define CONF_SI2C_ADDRESS 0x03
+
 // Baud of i2c-bus
 #define CONF_SI2C_BAUD 9600		/**< The baudrate of connected master */
 
 // Count of registers
 #define CONF_SI2C_REGISTER 10	/**< The amount of registers ( @link si2c_register see here @endlink) */
+
 
 
 /** @} */

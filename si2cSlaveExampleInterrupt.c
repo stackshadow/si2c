@@ -54,15 +54,12 @@ main(){
 
 // Init the BUS
 	si2cInit();
+	si2cReadyWait();
+
 
 // Enable Interrupt for INT1
 	GICR = 0<<INT0 | 1<<INT1;
 	MCUCR = 0<<ISC01 | 0<<ISC00;
-
-// Wait for I2C-BUS is ready
-	while( si2cState != si2cState_READY ){
-		si2cWaitInitCheck();
-	}
 
 // enable interruot
 	sei();
@@ -85,17 +82,16 @@ ISR(INT1_vect){
 // Disable Interrupt
 	cli();
 
-// Check if START occure
-	si2cSlaveWaitForStart();
 
-// Handle Slave-communication if START occure
-// this function is BLOCK you program !
-	si2cSlave( 0x05 );
+	asm volatile ( 	"rcall si2cWaitInit"		"\n\t"
+					"rcall si2cReadByte"		"\n\t"
+					"rcall si2cCheckAddress"	"\n\t"
+	);
 
-	#ifdef SI2C_USE_STATUS
-		SET( PORT, SI2C_STATUS_PORT, SI2C_STATUS_PIN );
-	#endif // SI2C_USE_STATUS
+	si2cShowByte(si2cByte);
 
-// Enable Interrupt
 	sei();
 }
+
+
+

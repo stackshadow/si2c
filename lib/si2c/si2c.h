@@ -25,9 +25,7 @@ Main functions of Software-I2C-Library
 */
 
 
-// Needed thinks for avr
-#include <util/delay.h>
-#include <avr/io.h>
+
 
 /** @ingroup si2c_main */
 // Some defines we need
@@ -44,6 +42,30 @@ Main functions of Software-I2C-Library
 #define		IS_SCL IS(CONF_SI2C_PORT,CONF_SI2C_CLK) /**< Checks if SCL is set */
 #define		IS_SDA IS(CONF_SI2C_PORT,CONF_SI2C_SDA) /**< Checks if SDA is set */
 
+
+
+
+// ASM
+#define		CONCAT2_( first, second ) _SFR_IO_ADDR( first##second )
+#define		CONCAT2( first, second ) CONCAT2_( first, second )
+
+#define 	PIN_ASM_( port, bit) _SFR_IO_ADDR( PIN##port ), bit
+#define 	PIN_ASM( port, bit) PIN_ASM_( port, bit) /**< Set a bit inside an register */
+
+
+#define		IS_SCL_ASM PIN_ASM(CONF_SI2C_PORT,CONF_SI2C_CLK) /**< Checks if SCL is set */
+#define		IS_SDA_ASM PIN_ASM(CONF_SI2C_PORT,CONF_SI2C_SDA) /**< Checks if SDA is set */
+
+#define		PORT_I2C CONCAT2( PORT, CONF_SI2C_PORT )
+#define		DDR_I2C CONCAT2( DDR, CONF_SI2C_PORT )
+
+
+
+
+#define 	WAIT_SCL_HIGH while( ! IS_SCL )
+#define 	WAIT_SDA_HIGH while( ! IS_SDA )
+#define 	WAIT_SCL_LOW while( IS_SCL )
+
 // Wait time of ACK
 #define		SI2C_US_ACK ( F_CPU / CONF_SI2C_BAUD )
 
@@ -54,16 +76,19 @@ Main functions of Software-I2C-Library
 	#endif // SI2C_STATUS_PIN
 #endif // SI2C_STATUS_PORT
 
+#ifndef IsASM
 
 // Status on the BUS
 typedef enum {
-	si2cState_UNKNOWN = -1,
-	si2cState_READY,
-	si2cState_RUN,
-	si2cState_RS, 		// repeated start
-	si2cState_STOP
+	si2cState_UNKNOWN = -1,		// Init state
+	si2cState_READY,			// SDA and SCL is high
+	si2cState_START,			// Start occured
+	si2cState_RUN,				// Running
+	si2cState_STOP				// Stop occured
 }
 si2cState_t;
+
+unsigned char si2cStateRW;
 
 // Requested direction from MASTER
 typedef enum {
@@ -74,17 +99,17 @@ typedef enum {
 si2cDirection_t;
 
 // Basic infos
-si2cState_t			si2cState;
-si2cDirection_t 	si2cDirection;
+si2cState_t					si2cState;
+si2cDirection_t 			si2cDirection;
 
 // Bits and Bytes
-unsigned char		si2cBit;
-unsigned char		si2cByte;
-char				si2cByteIndex;
+unsigned char				si2cBit;
+volatile unsigned char		si2cByte;
+char						si2cByteIndex;
 
 // Registers
-unsigned char		si2cRegister[CONF_SI2C_REGISTER];
-int					si2cRegisterIndex;
+unsigned char				si2cRegister[CONF_SI2C_REGISTER];
+int							si2cRegisterIndex;
 
 
 
@@ -106,3 +131,6 @@ This function:
 - Set the state to READY if SDA and SCL is high
 */
 void				si2cWaitInitCheck();
+
+
+#endif

@@ -18,6 +18,15 @@
 					<Add option="-print-file-name=include" />
 				</Compiler>
 			</Target>
+			<Target title="Interrupt">
+				<Option type="4" />
+				<Option compiler="avr-gcc" />
+				<Compiler>
+					<Add option="-mmcu=atmega8" />
+					<Add option="-O" />
+					<Add option="-print-file-name=include" />
+				</Compiler>
+			</Target>
 			<Target title="Upload">
 				<Option type="4" />
 				<Option compiler="avr-gcc" />
@@ -35,18 +44,10 @@
 				<Option type="4" />
 				<Option compiler="avr-gcc" />
 			</Target>
-			<Target title="Interrupt">
-				<Option type="4" />
-				<Option compiler="avr-gcc" />
-				<Compiler>
-					<Add option="-mmcu=atmega8" />
-					<Add option="-O" />
-					<Add option="-print-file-name=include" />
-				</Compiler>
-			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="Release and Upload" targets="Release;Upload;" />
+			<Add alias="Interrupt and Upload" targets="Upload;Interrupt;" />
+			<Add alias="Release and Upload" targets="Upload;Release;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
@@ -68,6 +69,11 @@
 			<Option target="Release" />
 			<Option target="Interrupt" />
 		</Unit>
+		<Unit filename="../lib/si2c/si2cCheckAddress.S" />
+		<Unit filename="../lib/si2c/si2cReadByte.S">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="../lib/si2c/si2cSlave.c">
 			<Option compilerVar="CC" />
 			<Option target="Release" />
@@ -80,6 +86,10 @@
 		<Unit filename="../lib/si2c/si2cSlave.mk">
 			<Option target="Release" />
 			<Option target="Interrupt" />
+		</Unit>
+		<Unit filename="../lib/si2c/si2cWaitInit.S">
+			<Option compile="0" />
+			<Option link="0" />
 		</Unit>
 		<Unit filename="../lib/si2c/si2c_config.h">
 			<Option target="Release" />
