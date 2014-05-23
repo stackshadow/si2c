@@ -16,6 +16,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Needed thinks for avr
+#include <util/delay.h>
+#include <avr/io.h>
 
 #include "si2c_config.h"
 #include "si2c.h"
@@ -45,12 +48,37 @@ void				si2cInit(){
 }
 
 
-void				si2cWaitInitCheck(){
-	if( si2cState == si2cState_UNKNOWN ){
-		if( IS_SCL && IS_SDA ){
-			si2cState = si2cState_READY;
-		}
-	}
+void				si2cReadyWait(){
+	WAIT_SCL_HIGH;
+	WAIT_SDA_HIGH;
+
+	si2cState = si2cState_READY;
 }
+
+
+void				si2cShowByte( unsigned char byte ){
+
+// Read byte
+	for( si2cByteIndex = 7; si2cByteIndex >= 0; si2cByteIndex-- ){
+
+
+		SET( PORT, SI2C_STATUS_PORT, SI2C_STATUS_PIN );
+		_delay_ms(500);
+
+		CLR( PORT, SI2C_STATUS_PORT, SI2C_STATUS_PIN );
+		if( byte & _BV(si2cByteIndex) ){
+			_delay_ms(500);
+		} else {
+			_delay_ms(100);
+		}
+
+
+
+	}
+
+	SET( PORT, SI2C_STATUS_PORT, SI2C_STATUS_PIN );
+
+}
+
 
 

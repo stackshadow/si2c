@@ -5,7 +5,7 @@
 # First we define some variables
 CPU=atmega8
 F_CPU=16000000UL
-Objects += si2cSlaveExample.o
+Objects += si2cSlaveExample.o si2cTest.o
 
 # Include the makefile for si2c-Slave
 include lib/si2c/si2cSlave.mk
@@ -27,6 +27,7 @@ clean:
 	@rm -f -v ./*.elf
 	@rm -f -v ./*.hex
 	@rm -f -v ./*.o
+	@rm -f -v ./*.asmo
 
 
 # Codeblocks targets
@@ -36,6 +37,9 @@ cleanRelease: si2cclean clean
 
 Interrupt: si2cSlaveExampleInterrupt.o firmware.hex
 cleanInterrupt: si2cclean clean
+
+Preprocess:
+	avr-gcc -E -g -Os -mmcu=$(CPU) -DF_CPU=$(F_CPU) -c lib/si2c/si2cCheckAddress.S -o si2cText.pp
 
 docs:
 	export SOURCEDIR="../../.." && \
