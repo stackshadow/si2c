@@ -14,25 +14,21 @@
 ; You should have received a copy of the GNU Lesser General Public License
 ; along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 ;
-; This file is an example on how to use the si2c-library in you Project
+; This file contains the function to check if our address match
 
 
-#define IsASM
-
-#include "si2c_config.h"
-#include "si2c.h"
-#include <avr/io.h>
-
-
-.extern si2cByte
 
 .globl si2cCheckAddress				; Register Function for C
 si2cCheckAddress:
 ;	push r16						; push r16 to stack
 
+; Clear all register
+	clr r17
+	clr r18
+
 	lds r16, si2cByte				; load from C value
 	lsr r16							; move one byte to right
-	cpi r16, CONF_SI2C_ADDRESS		; check if address match
+	cpi r16, CONF_SI2C_ADDRESS		; compare to address
 	brne si2cCheckAddressNACK		; if not match, go to end
 
 
@@ -40,35 +36,73 @@ si2cCheckAddress:
 	sbi DDR_I2C, CONF_SI2C_SDA		; Set SDA to output ( and to low )
 	nop
 
-; wait for scl high
-	scl_wait_high:
-	sbis IS_SCL_ASM					; skips the next instruction if the bit is set
-	rjmp scl_wait_high
-
+; wait for scl impulse
+	rcall scl_wait_high
+	nop
+	rcall scl_wait_low
 	nop
 
-; wait for scl low
-	scl_wait_low:
-	sbic  IS_SCL_ASM				; skips the next instruction if the bit is cleared
-	rjmp scl_wait_low
-
-	nop
-	nop
-	nop
 
 ; Switch back
 	cbi DDR_I2C, CONF_SI2C_SDA		; Set SDA to input ( and to low )
 	nop
 
+; test, show address
+	rcall ShowByte
 
 	rjmp si2cCheckAddressEnd
 
 si2cCheckAddressNACK:
+; wait for scl impulse
+	rcall scl_wait_high
+	nop
+	rcall scl_wait_low
+
+; Wait for RS
+	rcall scl_wait_high
+
+
+; save state of sda in r17
+	cbr r17, 1						; clear bit
+	sbic IS_SDA_ASM					; skips the next instruction if the bit is cleared
+	rjmp SDARegisterClear
+	cbr r17, 1
+	SDARegisterClear: nop
+
+; Tipp: 0b11111100
+; Check for repeated start / Stop
+	StartStopCheckLoop:
+
+	; If sda was high and get low -> repeadet start
+		cpi r17, 0b00000001				; compare to address
+		brne NoRepeadetStart			; if not match, check STOP
+
+		sbic IS_SDA_ASM					; if bit is cleared, dont jump -> RS occure
+		rjmp NoStop
+
+	; repeated start occure
+		rjmp si2cCheckAddressEnd
+
+		NoRepeadetStart:
+
+	; If sda was low and get high -> stop
+		sbis IS_SDA_ASM					; if bit is set, dont jump -> Stop occure
+		rjmp NoStop
+
+	; stop occure
+		rjmp si2cCheckAddressEnd
+
+		NoStop: nop
+
+	sbic IS_SCL_ASM					; skips the next instruction if the bit is cleared
+	rjmp StartStopCheckLoop
+
 
 
 si2cCheckAddressEnd:
 ;	pop r16							; restore r18 from stack
+	nop
+	nop
 	ret								; return
 
 
-#undef IsASM
