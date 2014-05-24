@@ -14,16 +14,10 @@
 ; You should have received a copy of the GNU Lesser General Public License
 ; along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 ;
-; This file is an example on how to use the si2c-library in you Project
+; This file contains the function in asm to read one byte from i2c-bus
 
 
-#define IsASM
 
-#include "si2c_config.h"
-#include "si2c.h"
-#include <avr/io.h>
-
-.extern si2cByte
 
 .globl si2cReadByte					; Register Function for C
 si2cReadByte:
@@ -44,12 +38,7 @@ loop:
 
 
 ; wait for scl high
-	scl_wait_high:
-	sbis IS_SCL_ASM					; skips the next instruction if the bit is set
-	rjmp scl_wait_high
-
-; give the controlle a litte bit time to read the port
-	nop
+	rcall scl_wait_high
 	nop
 
 ; read bit
@@ -62,12 +51,9 @@ loop:
 ; if sda is low, do nothin ( bit stay 0 )
 	sda_is_low: nop
 
-
-; wait for scl low
-	scl_wait_low:
-	sbic  IS_SCL_ASM				; skips the next instruction if the bit is cleared
-	rjmp scl_wait_low
-
+; Wait for scl low
+	rcall scl_wait_low
+	nop
 
 
 	lsr r17							; shift rightmost bit into carry, set Z flag if 0
@@ -87,5 +73,3 @@ loop:
 ret									; return
 
 
-
-#undef IsASM

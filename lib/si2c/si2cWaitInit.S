@@ -14,14 +14,8 @@
 ; You should have received a copy of the GNU Lesser General Public License
 ; along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 ;
-; This file is an example on how to use the si2c-library in you Project
+; This function wait until the bus is ready
 
-
-#define IsASM
-
-#include "si2c_config.h"
-#include "si2c.h"
-#include <avr/io.h>
 
 
 .globl si2cWaitInit					; Register Function for C
@@ -32,9 +26,9 @@ scl_wait_init:
 	sbic IS_SCL_ASM					; skips the next instruction if the bit is cleared
 	rjmp scl_wait_init
 
-sda_wait_ini:
+sda_wait_init:
 	sbic IS_SDA_ASM					; skips the next instruction if the bit is cleared
-	rjmp sda_wait_ini
+	rjmp sda_wait_init
 
 	nop
 	nop
@@ -42,4 +36,3 @@ sda_wait_ini:
 ret									; return
 
 
-#undef IsASM
