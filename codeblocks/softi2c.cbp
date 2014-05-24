@@ -74,6 +74,7 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="../lib/si2c/si2cSlave.S" />
 		<Unit filename="../lib/si2c/si2cSlave.c">
 			<Option compilerVar="CC" />
 			<Option target="Release" />
@@ -95,6 +96,8 @@
 			<Option target="Release" />
 			<Option target="Interrupt" />
 		</Unit>
+		<Unit filename="../lib/si2c/si2casm.S" />
+		<Unit filename="../lib/si2c/si2casm.h" />
 		<Unit filename="../si2c.make">
 			<Option target="Release" />
 			<Option target="Interrupt" />
