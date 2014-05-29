@@ -82,13 +82,7 @@ ISR(INT1_vect){
 // Disable Interrupt
 	cli();
 
-
-	asm volatile ( 	"rcall si2cWaitInit"		"\n\t"
-					"rcall si2cReadByte"		"\n\t"
-					"rcall si2cCheckAddress"	"\n\t"
-	);
-
-	si2cShowByte(si2cByte);
+	asm volatile ( 	"rcall si2cSlave"		"\n\t");
 
 	sei();
 }

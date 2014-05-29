@@ -60,6 +60,26 @@ Main functions of Software-I2C-Library
 #define		DDR_I2C CONCAT2( DDR, CONF_SI2C_PORT )
 
 
+// Some registers
+#define		rTemp1		r16
+#define		rTemp2		r17
+#define		rTemp3		r18
+#define		rTimer		r21
+#define		rTimer1		r22
+#define		rTimer2		r23
+
+// State register
+#define		rStateBitSDA 1
+#define		rStateBitAddress 2
+#define		rStateBitRestart 4
+#define		rStateBitStop 8
+
+#define		rStateBitSDAPos 1
+#define		rStateBitAddressPos 2
+#define		rStateBitRestartPos 3
+#define		rStateBitStopPos 4
+
+
 
 
 #define 	WAIT_SCL_HIGH while( ! IS_SCL )
@@ -97,10 +117,6 @@ typedef enum {
 	si2cDirection_WRITE
 }
 si2cDirection_t;
-
-// Basic infos
-si2cState_t					si2cState;
-si2cDirection_t 			si2cDirection;
 
 // Bits and Bytes
 unsigned char				si2cBit;

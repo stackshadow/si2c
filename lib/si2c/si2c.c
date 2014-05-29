@@ -25,9 +25,6 @@ along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 
 void				si2cInit(){
 
-// Setup soft i2c
-	si2cState = si2cState_UNKNOWN;
-
 // Setup Status LED
 #ifdef SI2C_USE_STATUS
 	SET( DDR, SI2C_STATUS_PORT, SI2C_STATUS_PIN );
@@ -51,8 +48,6 @@ void				si2cInit(){
 void				si2cReadyWait(){
 	WAIT_SCL_HIGH;
 	WAIT_SDA_HIGH;
-
-	si2cState = si2cState_READY;
 }
 
 

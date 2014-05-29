@@ -27,17 +27,68 @@
 .extern si2cByte
 
 
-; Additional functions ( to make code more readable )
-#include "si2casm.S"
+; Including all needed functions
+#include "si2cAdditional.S"
+#include "si2cSCL.S"
+#include "si2cSlaveWaitInit.S"
+#include "si2cSlaveReadByte.S"
+#include "si2cSlaveCheckAddress.S"
 
-; Function to init the bus
-#include "si2cWaitInit.S"
+.globl si2cSlave					; Register Function for C
+si2cSlave:
 
-; Function to read an Byte from the bus
-#include "si2cReadByte.S"
+; wait for bus init
+	rcall si2cSlaveWaitInit
 
-; Function to verify the address ( which was readed with ReadByte before )
-#include "si2cCheckAddress.S"
+; read one byte from bus ( The address )
+	rcall si2cSlaveReadByte
+
+; Check Address
+	rcall si2cSlaveCheckAddress
+
+
+
+	si2cSlaveEnd: nop
+
+ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

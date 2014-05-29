@@ -18,8 +18,8 @@
 
 
 
-.globl si2cWaitInit					; Register Function for C
-si2cWaitInit:
+.globl si2cSlaveWaitInit					; Register Function for C
+si2cSlaveWaitInit:
 
 ; ########################## Wait for bus init ##########################
 scl_wait_init:

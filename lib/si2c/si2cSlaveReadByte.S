@@ -17,58 +17,36 @@
 ; This file contains the function in asm to read one byte from i2c-bus
 
 
+; this function has some temporary register and manipulate register 20
 
-
-.globl si2cReadByte					; Register Function for C
-si2cReadByte:
-	push r16						; push r16 to stack
-	push r17						; push r17 to stack
-	push r18						; push r18 to stack
-
-
-    ldi	r16, 8						; counter
-	sbr	r17, 128					; bit 8
-	clr	r18							; data byte
-
-
-
+.globl si2cSlaveReadByte			; Register Function for C
+si2cSlaveReadByte:
+    ldi	rTemp1, 8					; counter
+	clr	rTemp2						; data byte
+	clr rTemp3
+	sbr rTemp3, 128
 
 ; ########################## Read byte ##########################
 loop:
 
 
 ; wait for scl high
-	rcall scl_wait_high
-	nop
+	rcall SCLWaitHigh
 
 ; read bit
-	sbis IS_SDA_ASM					; skips the next instruction if the bit is set
-	rjmp sda_is_low
+	sbic IS_SDA_ASM					; skips the next instruction if the bit is clear
+	or rTemp2, rTemp3
 
-; bit is 1
-	or   r18, r17
-
-; if sda is low, do nothin ( bit stay 0 )
-	sda_is_low: nop
 
 ; Wait for scl low
-	rcall scl_wait_low
-	nop
+	rcall SCLWaitLow
 
-
-	lsr r17							; shift rightmost bit into carry, set Z flag if 0
-    dec r16							; Schleifenzähler um 1 verringern, dabei wird das Zero Flag beeinflusst
+	lsr rTemp3						; shift left
+    dec rTemp1						; Schleifenzähler um 1 verringern
     brne loop						; wenn r17 noch nicht 0 geworden ist -> Schleife wiederholen
 
 ; ########################## end of read byte ##########################
-
-
-
-	sts si2cByte,r18				; save to C
-
-	pop r18							; restore r18 from stack
-	pop r17							; restore r17 from stack
-	pop r16							; restore r16 from stack
+	sts si2cByte,rTemp2				; save to C
 
 ret									; return
 

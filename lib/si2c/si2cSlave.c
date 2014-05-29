@@ -74,7 +74,7 @@ void				si2cSlaveReadByte(){
 		// Repeaded start
 			if( si2cBit ){
 				if( ! IS_SDA ){
-					si2cState = si2cState_RS;
+					si2cState = si2cState_START;
 					while( IS_SCL );
 					return;
 				}
@@ -120,108 +120,6 @@ void				si2cSlaveSendACK(){
 	CLR( DDR, CONF_SI2C_PORT, CONF_SI2C_SDA ); // Set SDA to input
 
 }
-
-
-void				si2cSlave( unsigned char Address ){
-	if( si2cState != si2cState_RUN ) return;
-
-
-// Block until i2c is finished
-	while( si2cState != si2cState_STOP ){
-
-	// Read a full byte
-		si2cSlaveReadByte();
-		if( si2cState == si2cState_STOP ){ continue; }
-
-
-	// RW ?
-	// 1 Master will read
-	// 0 Master will write
-		if( si2cByte & (_BV(0)) ){
-			si2cDirection = si2cDirection_READ;
-		} else {
-			si2cDirection = si2cDirection_WRITE;
-		}
-
-
-	// Delete bit 0 (rw) and shift to left
-		si2cByte &= ~(_BV(0));
-		si2cByte = si2cByte >> 1;
-
-
-	// Check Address
-		if( si2cByte == Address ){
-		// Send ACK
-			si2cSlaveSendACK(1);
-
-		// Set requested Register only on write
-			if( si2cDirection == si2cDirection_WRITE ){
-
-			// Read the register which come from the master
-				si2cSlaveReadByte();
-				si2cSlaveSendACK(1);
-
-			// Save register Position
-				si2cRegisterIndex = si2cByte;
-				if( si2cRegisterIndex > CONF_SI2C_REGISTER) si2cRegisterIndex = 0;
-
-			// Read the next byte
-				si2cSlaveReadByte();
-				if( si2cState == si2cState_STOP ) continue;
-				if( si2cState == si2cState_RS ){ si2cState = si2cState_RUN; continue; }
-				si2cSlaveSendACK(1);
-
-			// Call user Function
-				if( si2cSlaveRegisterPreWrite != 0 ){
-					if( si2cSlaveRegisterPreWrite( si2cRegisterIndex, si2cByte ) == 0 ){
-						continue;
-					}
-				}
-
-			// Write it to the register
-				si2cRegister[si2cRegisterIndex] = si2cByte;
-
-				return;
-			}
-
-		// Read
-			if( si2cDirection == si2cDirection_READ ){
-
-			// Call user Function
-				if( si2cSlaveRegisterPreRead != 0 ){
-					if( si2cSlaveRegisterPreRead( si2cRegisterIndex ) == 0 ){
-						continue;
-					}
-				}
-
-			// Send a byte to Master
-				si2cSlaveSendByte(si2cRegister[si2cRegisterIndex]);
-
-			// Master send ACK
-				while( ! (IS_SCL) );	// Wait for High
-				while( IS_SCL );		// Wait for Low
-
-			}
-
-		} else {
-			si2cDirection = si2cDirection_NO;
-		}
-
-
-	}
-
-	si2cState = si2cState_READY;
-	si2cDirection = si2cDirection_NO;
-
-}
-
-
-
-
-
-
-
-
 
 
 
