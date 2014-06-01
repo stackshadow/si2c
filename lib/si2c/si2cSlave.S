@@ -25,16 +25,20 @@
 
 ; Global vars from C
 .extern si2cByte
-
+.extern si2cSlaveReadRegister
+.extern si2cSlaveWriteRegister
 
 ; Including all needed functions
 #include "si2cAdditional.S"
 #include "si2cSCL.S"
+
 #include "si2cSlaveWaitInit.S"
 #include "si2cSlaveReadByte.S"
+#include "si2cSlaveSendByte.S"
 #include "si2cSlaveCheckAddress.S"
+#include "si2cSlaveSendACK.S"
 
-.globl si2cSlave					; Register Function for C
+.globl si2cSlave						; Register Function for C
 si2cSlave:
 
 ; wait for bus init
@@ -46,6 +50,41 @@ si2cSlave:
 ; Check Address
 	rcall si2cSlaveCheckAddress
 
+; RW ?
+	lds rTemp1, si2cStateRW				; load from C value
+	sbrc rTemp1, 0						; If bit is 1, master will read
+	rjmp si2cSlaveRead
+
+
+; ################################## Write from master to slave ##################################
+
+; read from master ( register )
+	rcall si2cSlaveReadByte
+	rcall si2cSlaveSendACK
+
+; save register position
+	lds rTemp1, si2cByte
+	sts si2cRegisterIndex, rTemp1
+
+	si2cSlaveDataRead:
+
+	; read from master ( byte )
+		rcall si2cSlaveReadByte
+		rcall si2cSlaveSendACK
+
+	; call c function to save it to an array
+		rcall si2cSlaveReadRegister
+
+		rjmp si2cSlaveDataRead
+
+
+; ################################## Read from slave to master ##################################
+	si2cSlaveRead:
+		rcall si2cSlaveWriteRegister
+
+		rcall si2cSlaveSendByte
+		rcall SCLWaitHigh
+		rcall SCLWaitLow
 
 
 	si2cSlaveEnd: nop

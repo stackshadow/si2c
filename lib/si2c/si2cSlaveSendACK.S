@@ -14,42 +14,23 @@
 ; You should have received a copy of the GNU Lesser General Public License
 ; along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 ;
-; This file contains the function to check if our address match
+; This function wait until the bus is ready
 
 
+.global si2cSlaveSendACK
+si2cSlaveSendACK:
 
-.globl si2cSlaveCheckAddress			; Register Function for C
-si2cSlaveCheckAddress:
+; Address match, send ACK
+	sbi DDR_I2C, CONF_SI2C_SDA			; Set SDA to output ( and to low )
+	nop
 
-; init
-	lds rTemp1, si2cByte				; load from C value
-	clr rTemp2
-
-; Read RW-State
-	sbrc rTemp1, 0
-	sbr rTemp2, 1
-	sts si2cStateRW, rTemp2
-
-; Shift
-	lsr rTemp1							; move one byte to right
-
-; compare address
-	cpi rTemp1, CONF_SI2C_ADDRESS
-	brne si2cCheckAddressNACK
-
-; send ACK
-	rcall si2cSlaveSendACK
-	rjmp si2cCheckAddressEnd
-
-si2cCheckAddressNACK:
-; wait until RS or STOP occure
+; wait for scl impulse
 	rcall SCLWaitHigh
-	nop
 	rcall SCLWaitLow
+
+; Switch back
+	cbi DDR_I2C, CONF_SI2C_SDA			; Set SDA to input ( and to low )
 	nop
-	rjmp si2cCheckAddressNACK
-
-si2cCheckAddressEnd:
-	ret									; return
 
 
+ret

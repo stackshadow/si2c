@@ -11,8 +11,7 @@ endif
 
 # Our i2c-object-files
 si2c += lib/si2c/si2c.o
-#lib/si2c/si2cSlave.o
-si2cSlave += $(si2c) lib/si2c/si2cSlave.asmo
+si2cSlave += $(si2c) lib/si2c/si2cSlave.o lib/si2c/si2cSlave.asmo
 
 # si2c-objects
 lib/si2c/%.o: lib/si2c/%.c

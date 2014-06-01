@@ -108,8 +108,6 @@ typedef enum {
 }
 si2cState_t;
 
-unsigned char si2cStateRW;
-
 // Requested direction from MASTER
 typedef enum {
 	si2cDirection_NO,
@@ -121,6 +119,7 @@ si2cDirection_t;
 // Bits and Bytes
 unsigned char				si2cBit;
 volatile unsigned char		si2cByte;
+unsigned char				si2cStateRW;
 char						si2cByteIndex;
 
 // Registers

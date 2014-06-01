@@ -88,6 +88,8 @@
 		<Unit filename="../lib/si2c/si2cSlaveCheckAddress.S" />
 		<Unit filename="../lib/si2c/si2cSlaveProtokoll.S" />
 		<Unit filename="../lib/si2c/si2cSlaveReadByte.S" />
+		<Unit filename="../lib/si2c/si2cSlaveSendACK.S" />
+		<Unit filename="../lib/si2c/si2cSlaveSendByte.S" />
 		<Unit filename="../lib/si2c/si2cSlaveWaitInit.S" />
 		<Unit filename="../lib/si2c/si2c_config.h">
 			<Option target="Release" />
