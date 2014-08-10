@@ -9,16 +9,18 @@ var indexSectionsWithContent =
 {
   0: "ceist",
   1: "s",
-  2: "ei",
-  3: "t"
+  2: "s",
+  3: "ei",
+  4: "t"
 };
 
 var indexSectionNames =
 {
   0: "all",
   1: "functions",
-  2: "groups",
-  3: "pages"
+  2: "variables",
+  3: "groups",
+  4: "pages"
 };
 
 function convertToId(search)
