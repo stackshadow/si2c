@@ -5,8 +5,11 @@
     <WorkspaceConfiguration Name="Debug" Selected="no">
       <Project Name="si2c" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
+    <WorkspaceConfiguration Name="Release" Selected="no">
       <Project Name="si2c" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Docs" Selected="yes">
+      <Project Name="si2c" ConfigName="docs"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
