@@ -22,7 +22,7 @@ along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 @anchor si2c_config
 
 The configuration is done in the si2c_config.h \n
-You need to include this header into you project
+You need to include this header into you project and change the values according to your Hardware configuration
 
 @todo Implement support for multiple I²C on one controller
 */
@@ -45,7 +45,7 @@ You need to include this header into you project
 #define CONF_SI2C_SDA 3			/**< The SDA-Pin on CONF_SI2C_PORT */
 
 // Address of our device
-#define CONF_SI2C_ADDRESS 0x03
+#define CONF_SI2C_ADDRESS 0x22
 
 // Baud of i2c-bus
 #define CONF_SI2C_BAUD 9600		/**< The baudrate of connected master */

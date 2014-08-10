@@ -5,13 +5,13 @@ ifndef CPU
 $(error Variable "CPU" is not set)
 endif
 
-ifndef CPU
+ifndef F_CPU
 $(error Variable "F_CPU" is not set)
 endif
 
 # Our i2c-object-files
 si2c += lib/si2c/si2c.o
-si2cSlave += $(si2c) lib/si2c/si2cSlave.o lib/si2c/si2cSlave.asmo
+si2cSlave += $(si2c) lib/si2c/si2cSlave.asmo
 
 # si2c-objects
 lib/si2c/%.o: lib/si2c/%.c
@@ -20,7 +20,7 @@ lib/si2c/%.o: lib/si2c/%.c
 lib/si2c/%.asmo: lib/si2c/%.S
 	avr-gcc -g -Os -mmcu=$(CPU) -DF_CPU=$(F_CPU) -c $< -o $@
 
-
+si2cSlave: $(si2cSlave)
 
 si2cclean:
 	@rm -f -v lib/si2c/*.elf

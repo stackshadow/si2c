@@ -40,6 +40,7 @@ Here is the makefile for this example:
 #define F_CPU 16000000UL
 
 // Needed header
+#include <avr/io.h>
 #include "lib/si2c/si2c_config.h"
 #include "lib/si2c/si2c.h"
 #include "lib/si2c/si2cSlave.h"

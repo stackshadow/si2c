@@ -2,13 +2,20 @@
 # This is an example makefile on how to use the si2c-library
 
 
-# First we define some variables
+# This is needed by si2c-library
 CPU=atmega8
 F_CPU=16000000UL
-Objects += si2cSlaveExample.o si2cTest.o
 
 # Include the makefile for si2c-Slave
 include lib/si2c/si2cSlave.mk
+
+# Our test-objects
+Objects += si2cSlaveExample.o si2cTest.o
+
+
+
+.EXPORT_ALL_VARIABLES:
+.DEFAULT: firmware.hex
 
 
 # Objects
@@ -16,27 +23,23 @@ include lib/si2c/si2cSlave.mk
 	avr-gcc -g -Os -mmcu=$(CPU) -DF_CPU=$(F_CPU) -c $< -o $@
 
 
-firmware.hex: $(si2cSlave)
+firmware.hex: $(si2cSlave) 
 	avr-gcc -g -mmcu=$(CPU) `ls *.o` $(si2cSlave) -o firmware.elf
 	avr-objcopy -j .text -j .data -O ihex firmware.elf $@
 
-Upload:
+upload:
 	sudo /usr/bin/avrdude -P usb -c avrispv2 -p m8 -e -U flash:w:firmware.hex
 
-clean:
-	@rm -f -v ./*.elf
-	@rm -f -v ./*.hex
-	@rm -f -v ./*.o
-	@rm -f -v ./*.asmo
+clean: si2cclean
+	@rm -fR -v ./*.elf
+	@rm -fR -v ./*.hex
+	@rm -fR -v ./*.o
+
 
 
 # Codeblocks targets
 
-Release: si2cSlaveExample.o firmware.hex
-cleanRelease: si2cclean clean
-
-Interrupt: si2cSlaveExampleInterrupt.o firmware.hex
-cleanInterrupt: si2cclean clean
+Release: clean si2cSlaveExampleInterrupt.o firmware.hex
 
 Preprocess:
 	avr-gcc -E -g -Os -mmcu=$(CPU) -DF_CPU=$(F_CPU) -c lib/si2c/si2cCheckAddress.S -o si2cText.pp
