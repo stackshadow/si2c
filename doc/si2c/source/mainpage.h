@@ -37,8 +37,9 @@ RaspberryPi B	| Atmega 8	| 16Mhz | 9600Baud		|
 
 
 ## Configuration
-Before you use the library, you need to setup it. \n
-@link si2c_config See here on how to do that @endlink
+Before you use the library, you need to do the following steps. \n
+- Configure the header: @link si2c_config See here on how to do that @endlink
+- You need to define two functions: @ref si2cSlaveReadRegister and @ref si2cSlaveWriteRegister
 
 
 @anchor si2c_register
