@@ -44,13 +44,46 @@ Here is the makefile for this example:
 #include "lib/si2c/si2cSlave.h"
 
 #include <avr/interrupt.h>
+#include <avr/io.h>
+#include <util/delay.h>
+
+
+
+void				si2cSlaveReadRegister(){
+	if( si2cRegisterIndex < CONF_SI2C_REGISTER ){
+		si2cRegister[si2cRegisterIndex] = si2cByte;
+	}
+}
+
+void				si2cSlaveWriteRegister(){
+	if( si2cRegisterIndex < CONF_SI2C_REGISTER ){
+		si2cByte = si2cRegister[si2cRegisterIndex];
+	}
+}
+
 
 
 main(){
 
-// We setup an LED we would like to light up
+	SET( DDR, C, 3 );
+	SET( DDR, C, 4 );
 	SET( DDR, C, 5 );
-	SET( PORT, C, 5 );
+	while(1){
+// We setup an LED we would like to light up
+
+		SET( PORT, C, 3 );
+		_delay_ms(1000);
+		CLR( PORT, C, 3 );
+		
+		SET( PORT, C, 4 );
+		_delay_ms(1000);
+		CLR( PORT, C, 4 );
+
+		SET( PORT, C, 5 );
+		_delay_ms(1000);
+		CLR( PORT, C, 5 );
+	}
+	
 
 // Init the BUS
 	si2cInit();
@@ -77,12 +110,13 @@ main(){
 
 }
 
+
 ISR(INT1_vect){
 
 // Disable Interrupt
 	cli();
 
-	asm volatile ( 	"rcall si2cSlave"		"\n\t");
+//	asm volatile ( 	"rcall si2cSlave"		"\n\t");
 
 	sei();
 }

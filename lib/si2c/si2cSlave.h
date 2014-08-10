@@ -27,28 +27,45 @@ This functions handle communication as a slave.
 
 /** @ingroup si2c_slave
 @~english
+@anchor si2c_slave_functionread
 @brief User defined function: Write request from Master
 
 This function get called if:
-- the Master set already the register
-- the next byte was readed from the Master
-- before this byte get written to the requested register
+- the slave read an complete Byte and its saved to si2cByte
 
-If you return this function with 0, the byte get not written to the register. \n
-Return everything else, and the byte get written to the register
+Here is an example on how to use this
+@code{.cpp}
+	void				si2cSlaveReadRegister(){
+		if( si2cRegisterIndex < CONF_SI2C_REGISTER ){
+			si2cRegister[si2cRegisterIndex] = si2cByte;
+		}
+	}
+@endcode
+ 
+
 */
-int					(*si2cSlaveRegisterPreWrite )( unsigned char Register, unsigned char WrittenByte );      // Function pointer
+int					(*si2cSlaveReadRegister )();      // Function pointer
 
 /** @ingroup si2c_slave
 @~english
+@anchor si2c_slave_functionwrite
 @brief User defined function: Read request from Master
 
 This function get called if:
 - the Master request an read
 
-If you return this function with 0, the requested register is not send to the master
+In this function you need to write to si2cByte
+
+Here is an example on how to do this
+@code{.cpp}
+	void				si2cSlaveWriteRegister(){
+		if( si2cRegisterIndex < CONF_SI2C_REGISTER ){
+			si2cByte = si2cRegister[si2cRegisterIndex];
+		}
+	}
+@endcode
 */
-int					(*si2cSlaveRegisterPreRead )( unsigned char Register );      // Function pointer
+int					(*si2cSlaveWriteRegister )();      // Function pointer
 
 
 /** @ingroup si2c_slave
