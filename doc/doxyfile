@@ -1,4 +1,4 @@
-#Copyright (C) 2014 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
+#Copyright (C) 2015 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
 #
 #This file is part of si2c
 #
@@ -20,7 +20,7 @@
 
 PROJECT_NAME			= "si2c"
 PROJECT_BRIEF			= "Software I2C-Slave-Library for AVR's microcontroller"
-OUTPUT_DIRECTORY		= "../"
+OUTPUT_DIRECTORY		= ".build"
 OUTPUT_LANGUAGE			= "English"
 INTERNAL_DOCS 			= NO
 
@@ -29,16 +29,13 @@ HIDE_UNDOC_MEMBERS		= YES
 SORT_MEMBER_DOCS		= NO
 
 # File handling
-FILE_PATTERNS = *.c *.h *.mk
-EXTENSION_MAPPING = mk=C
+FILE_PATTERNS = *.c *.h *.mk *.s
+EXTENSION_MAPPING = mk=C s=C
 
 # Input
 INPUT = 		mainpage.h \
-				$(SOURCEDIR)/si2cSlaveExample.c \
-				$(SOURCEDIR)/si2cSlaveExampleInterrupt.c \
-				$(SOURCEDIR)/lib/si2c/si2c.h \
-				$(SOURCEDIR)/lib/si2c/si2cSlave.h \
-				$(SOURCEDIR)/lib/si2c/si2c_config.h
+				$(SOURCEDIR)/avr/ \
+				$(SOURCEDIR)/gpio/
 EXAMPLE_PATH =	$(SOURCEDIR)/
 
 # Output

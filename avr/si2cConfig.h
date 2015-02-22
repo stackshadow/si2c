@@ -1,5 +1,5 @@
-/*
-Copyright (C) 2014 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
+/* si2c - An software based i2c-library - Configuration file of si2c
+Copyright (C) 2015 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
 
 This file is part of si2c
 
@@ -29,13 +29,13 @@ You need to include this header into you project and change the values according
 
 // Of course the CPU-Speed
 #ifndef F_CPU
-	#warning F_CPU is not set inside the MAKEFILE !
+	#warning F_CPU is not set !!!
 #endif
 
 // LED to display I2C-Status
 // comment this two lines if you dont wan't to use the status
-#define SI2C_STATUS_PORT B		/**< The Port of the Status LED ( Light up when BUS comm is active ) */
-#define SI2C_STATUS_PIN 0		/**< The Pin of the Status LED */
+#define CONF_STATUS_PORT D		/**< The Port of the Status LED ( Light up when BUS comm is active ) */
+#define CONF_STATUS_PIN 0		/**< The Pin of the Status LED */
 
 
 // Port configuration for Software I2C
@@ -45,13 +45,12 @@ You need to include this header into you project and change the values according
 #define CONF_SI2C_SDA 3			/**< The SDA-Pin on CONF_SI2C_PORT */
 
 // Address of our device
-#define CONF_SI2C_ADDRESS 0x22
-
-// Baud of i2c-bus
-#define CONF_SI2C_BAUD 9600		/**< The baudrate of connected master */
+#define CONF_SI2C_ADDRESS 0x04
 
 // Count of registers
 #define CONF_SI2C_REGISTER 10	/**< The amount of registers ( @link si2c_register see here @endlink) */
+
+
 
 
 

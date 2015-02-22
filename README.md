@@ -1,42 +1,56 @@
 # si2c
-====
 
 Software based I²C library ( I²C-Slave ) for AVR's atmega
 
+## Whats inside
+* software i2c-slave for avr's atmega family
+* software i2c-master for raspberry pi ( or all devices which support wiringPi )
+
+## Features not finished yet
+* time-streching
+* software i2c-master for avr's atmega
+
+
+## That works
+* read and write from raspberry to atmega8 over pins you can choose ;)
+* use speeds at your own choise
+
+## Need to be tested
+* use of interrupt
+
 
 ## How to start
-====
 
-### Integrate in your Project
+### Dependencies
+* make
+* avr-gcc
+* gcc
+* wiringPi-library ( on raspberry )
 
-To integrate the si2c-library in your Project just copy the "lib/si2c" Folder to your Project.
+### On AVR's site
+#### Setup
+Please change the variables inside si2cConfig.h in the avr/ folder
+#### build
+* change to directory avr
+* run make
+* upload the firmware to your atmega ;)
 
-If you use Make, add this to your Makefile:
-
-```Makefile
-# This is needed by si2c-library
-CPU=atmega8
-F_CPU=16000000UL
-
-# Include the makefile for si2c-Slave
-include lib/si2c/si2cSlave.mk
+### Raspberry
+#### Setup
+Use the function si2cMasterSetup() to change pins ( or the "-c" option from command line )
+#### build
+* change to directory gpio
+* run make
+#### usage
 ```
-
-And this is the final rule, to create the firmware for atmega:
-
-```Makefile
-firmware.hex: $(si2cSlave) 
-	avr-gcc -g -mmcu=$(CPU) `ls *.o` $(si2cSlave) -o firmware.elf
-	avr-objcopy -j .text -j .data -O ihex firmware.elf $@
+Usage:
+-c <SDA-Port> <SCL-Port> <TIME>
+-i: init - set SDA/SCL to high
+-as <address>: send address on write mode
+-ar <address>: send address on read mode
+-s: Send i2c-Start
+-r <byte>: Read i2c-byte
+-w <byte>: Send i2c-byte
+-e: Send i2c-stop
+-t <chipAddress>: Test if address is present
 ```
-
-### Configuration
-
-Edit the si2c_config.h
-or [see here](https://stackshadow.github.io/si2c/group__si2c__config.html#si2c_config) on how to do that
-
-### Add function
-There are two functions defined which can read/write from/to registers.
-
-
-si2cSlaveReadRegister

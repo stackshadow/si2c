@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
+Copyright (C) 2015 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
 
 This file is part of si2c
 

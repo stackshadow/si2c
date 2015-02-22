@@ -1,4 +1,4 @@
-; Copyright (C) 2014 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
+; Copyright (C) 2015 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
 ;
 ; This file is part of si2c
 ;
@@ -17,11 +17,11 @@
 ; This function wait until the bus is ready
 
 
-.global si2cSlaveSendACK
-si2cSlaveSendACK:
+.global si2cSlaveACK
+si2cSlaveACK:
 
 ; Address match, send ACK
-	sbi DDR_I2C, CONF_SI2C_SDA			; Set SDA to output ( and to low )
+	SET_ASM( DDR, CONF_SI2C_PORT, CONF_SI2C_SDA )
 	nop
 
 ; wait for scl impulse
@@ -29,8 +29,17 @@ si2cSlaveSendACK:
 	rcall SCLWaitLow
 
 ; Switch back
-	cbi DDR_I2C, CONF_SI2C_SDA			; Set SDA to input ( and to low )
+	CLR_ASM( DDR, CONF_SI2C_PORT, CONF_SI2C_SDA )
 	nop
+; return
+	ret
 
 
-ret
+.global si2cSlaveNACK
+si2cSlaveNACK:
+; wait for scl impulse
+	rcall SCLWaitHigh
+	rcall SCLWaitLow
+; return
+	ret
+

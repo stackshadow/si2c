@@ -1,0 +1,37 @@
+digraph asmCallGraph {
+	node [ shape="record" ]
+	nodesep=0.6
+	ranksep=0.6
+	
+	//subgraph cluster10 {
+		//edge [ style="invisible" ]
+		
+		SCLWaitHigh [label="{ <rcall> SCLWaitHigh| {  }|<ret> return }"];
+		SCLWaitLow [label="{ <rcall> SCLWaitLow| {  }|<ret> return }"];
+		SDAWaitHigh [label="{ <rcall> SDAWaitHigh| {  }|<ret> return }"];
+		SDAWaitLow [label="{ <rcall> SDAWaitLow| {  }|<ret> return }"];
+		
+		si2cSlaveByteRead [label="{ <frcall> si2cSlaveByteRead| { rTemp1 | rTemp2 | rTemp3 }|<ret> return }"];
+		
+		//SCLWaitHigh -> SCLWaitLow [ weight="6" ]
+		//SCLWaitLow -> SDAWaitHigh [ weight="6" ]
+		//SDAWaitHigh -> SDAWaitLow [ weight="6" ]
+		//SDAWaitLow -> si2cSlaveByteRead 
+	//}
+	
+	//subgraph cluster1 {
+		//label="Wait for Start"
+		
+		busInitSDA [ label="Wait for SDA LOW" ]
+		busInitSCL [ label="Wait for SCL LOW" ]
+		
+		busInitSDA -> busInitSCL [ weight="9" ]
+		busInitSDA:w -> SDAWaitLow:rcall
+		SDAWaitLow:ret -> busInitSDA:w
+		
+		busInitSCL:w -> SCLWaitLow:rcall
+		SCLWaitLow:ret -> busInitSCL:w
+	//}
+	
+	
+}

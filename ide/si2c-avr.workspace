@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Workspace Name="si2c-avr" Database="si2c.tags">
+  <Project Name="si2c-avr" Path="si2c-avr.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="no">
+      <Project Name="si2c-avr" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="gpio" Selected="yes">
+      <Project Name="si2c-avr" ConfigName="gpio"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="UpLoad" Selected="no">
+      <Project Name="si2c-avr" ConfigName="Load"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="doc" Selected="no">
+      <Project Name="si2c-avr" ConfigName="doc"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

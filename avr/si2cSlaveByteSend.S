@@ -1,4 +1,4 @@
-; Copyright (C) 2014 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
+; Copyright (C) 2014-2015 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
 ;
 ; This file is part of si2c
 ;
@@ -19,18 +19,16 @@
 
 ; this function send an byte
 
-.globl si2cSlaveSendByte				; Register Function for C
-si2cSlaveSendByte:
-    lds	rTemp1, si2cByte				; load byte which we would like to send
-    ldi	rTemp2, 8						; counter
+.globl si2cSlaveByteSend				; Register Function for C
+si2cSlaveByteSend:
+    ldi	rTemp1, 8						; counter
 
 
 	si2cSlaveSendByteLoop:
 
 	; Send high ( if it is )
-		sbrs rTemp1, 7
-		sbi DDR_I2C, CONF_SI2C_SDA		; Set SDA to output ( and to low )
-
+		sbrs rParameter, 7
+		SET_ASM( DDR, CONF_SI2C_PORT, CONF_SI2C_SDA )
 
 	; wait for scl high
 		rcall SCLWaitHigh
@@ -39,12 +37,12 @@ si2cSlaveSendByte:
 
 
 	; Switch back
-		cbi DDR_I2C, CONF_SI2C_SDA		; Set SDA to input ( and to low )
+		CLR_ASM( DDR, CONF_SI2C_PORT, CONF_SI2C_SDA )
 		nop
 
 
-		lsl rTemp1						; shift right
-		dec rTemp2						; Schleifenzähler um 1 verringern
+		lsl rParameter					; shift right
+		dec rTemp1						; Schleifenzähler um 1 verringern
 		brne si2cSlaveSendByteLoop		; wenn noch nicht 0 geworden ist -> Schleife wiederholen
 
 ret										; return

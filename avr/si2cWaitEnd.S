@@ -1,4 +1,4 @@
-; Copyright (C) 2014 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
+; Copyright (C) 2015 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
 ;
 ; This file is part of si2c
 ;
@@ -16,23 +16,30 @@
 ;
 ; This function wait until the bus is ready
 
+.global si2cWaitEnd
+si2cWaitEnd:
+
+	; Wait for high
+	rcall SCLWaitHigh
+
+	; Check if SDA is High or Low
+	sbic SDA_ASM					; If SDA = 1
+	rjmp si2cWaitEndWaitSCLLow		; then jump
+
+	si2cWaitEndWaitStop:
+	; SDA is low, wait that its getting high -> STOP
+		sbic SDA_ASM					; if SDA gets 1
+		rjmp si2cWaitEndFinish			; then jump
+
+	; SCL gets low ?
+		sbis SCL_ASM					; if SCL = 0
+		rjmp si2cWaitEnd				; then jump
+		rjmp si2cWaitEndWaitStop		; else jump
 
 
-.globl si2cSlaveWaitInit					; Register Function for C
-si2cSlaveWaitInit:
+si2cWaitEndWaitSCLLow:
+	rcall SCLWaitLow			; wait that scl get low
+	rjmp si2cWaitEnd			; jump back
 
-; ########################## Wait for bus init ##########################
-scl_wait_init:
-	sbic IS_SCL_ASM					; skips the next instruction if the bit is cleared
-	rjmp scl_wait_init
-
-sda_wait_init:
-	sbic IS_SDA_ASM					; skips the next instruction if the bit is cleared
-	rjmp sda_wait_init
-
-	nop
-	nop
-
-ret									; return
-
-
+si2cWaitEndFinish: 
+	ret
