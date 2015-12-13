@@ -95,18 +95,23 @@ void			si2cMasterSendBit( char bit ){
 	printf( "%s %i\n", __FUNCTION__, bit );
 
 	if( bit == 1 ){
+        printf( "%s SDA: High\n", __FUNCTION__ );
 		digitalWrite( si2cMaster->GPIO_SDA, HIGH );
 	} else {
+        printf( "%s SDA: Low\n", __FUNCTION__ );
 		digitalWrite( si2cMaster->GPIO_SDA, LOW );
 	}
 	usleep( si2cMaster->SCL_TIME_U * 1 );
 	
+    printf( "%s SCL: High\n", __FUNCTION__ );
 	digitalWrite( si2cMaster->GPIO_SCL, HIGH );
 	usleep( si2cMaster->SCL_TIME_U * 1 );
 	
+    printf( "%s SCL: Low\n", __FUNCTION__ );
 	digitalWrite( si2cMaster->GPIO_SCL, LOW );
 	usleep( si2cMaster->SCL_TIME_U * 1 );
 	
+    printf( "%s SDA: Low\n", __FUNCTION__ );
 	digitalWrite( si2cMaster->GPIO_SDA, LOW );
 	usleep( si2cMaster->SCL_TIME_U * 1 );
 }
