@@ -2,24 +2,6 @@
 <CodeLite_Project Name="si2c-avr" InternalType="">
   <Description/>
   <Dependencies/>
-  <VirtualDirectory Name="old">
-    <File Name="../../lib/si2c/si2c.c"/>
-    <File Name="../../lib/si2c/si2c.h"/>
-    <File Name="../../lib/si2c/si2c.mk"/>
-    <File Name="../../lib/si2c/si2c.o"/>
-    <File Name="../../lib/si2c/si2cAdditional.S"/>
-    <File Name="../../lib/si2c/si2cSCL.S"/>
-    <File Name="../../lib/si2c/si2cSlave.S"/>
-    <File Name="../../lib/si2c/si2cSlave.h"/>
-    <File Name="../../lib/si2c/si2cSlave.o"/>
-    <File Name="../../lib/si2c/si2cSlaveCheckAddress.S"/>
-    <File Name="../../lib/si2c/si2cSlaveReadByte.S"/>
-    <File Name="../../lib/si2c/si2cSlaveSendACK.S"/>
-    <File Name="../../lib/si2c/si2cSlaveSendByte.S"/>
-    <File Name="../../lib/si2c/si2cSlaveWaitInit.S"/>
-    <File Name="../../lib/si2c/si2c_config.h"/>
-    <File Name="../../si2cSlaveExampleInterrupt.c"/>
-  </VirtualDirectory>
   <VirtualDirectory Name="avr">
     <File Name="../avr/helpers.h"/>
     <File Name="../avr/si2cConfig.h"/>
@@ -40,7 +22,6 @@
   <VirtualDirectory Name="gpio">
     <File Name="../gpio/si2cMaster.c"/>
     <File Name="../gpio/si2cMaster.h"/>
-    <File Name="../gpio/Makefile"/>
     <File Name="../gpio/si2c.c"/>
     <File Name="../gpio/si2c.h"/>
   </VirtualDirectory>
@@ -49,6 +30,30 @@
     <File Name="../doc/Makefile"/>
     <File Name="../doc/doxyfile"/>
     <File Name="../doc/mainpage.h"/>
+    <File Name="../LICENSE"/>
+    <File Name="../README.md"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="make">
+    <File Name="../make/MakefileGPIO.mk"/>
+    <File Name="../make/MakefileAVR.mk"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="avr-new">
+    <File Name="../avr-new/config.h"/>
+    <File Name="../avr-new/si2cSlave.h"/>
+    <File Name="../avr-new/si2cSlave.asmh"/>
+    <File Name="../avr-new/makros.h"/>
+    <File Name="../avr-new/si2cSlave.S"/>
+    <File Name="../avr-new/si2cSetup.S"/>
+    <File Name="../avr-new/firmwareTest.c"/>
+    <File Name="../avr-new/si2cSlave.c"/>
+    <VirtualDirectory Name="watchdog">
+      <File Name="../avr-new/watchdog/si2cWD.S"/>
+      <File Name="../avr-new/watchdog/si2cWD.c"/>
+      <File Name="../avr-new/watchdog/si2cWD.h"/>
+    </VirtualDirectory>
+    <File Name="../avr-new/si2cSlaveReadByte.S"/>
+    <File Name="../avr-new/si2cSlaveWaitForBus.S"/>
+    <File Name="../avr-new/si2cSlaveCheckAddress.S"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
@@ -91,7 +96,7 @@
         <CustomPostBuild/>
         <CustomPreBuild/>
       </AdditionalRules>
-      <Completion EnableCpp11="no">
+      <Completion EnableCpp11="no" EnableCpp14="no">
         <ClangCmpFlagsC/>
         <ClangCmpFlags/>
         <ClangPP/>
@@ -129,11 +134,52 @@
         <CustomPostBuild/>
         <CustomPreBuild/>
       </AdditionalRules>
-      <Completion EnableCpp11="no">
+      <Completion EnableCpp11="no" EnableCpp14="no">
         <ClangCmpFlagsC/>
         <ClangCmpFlags/>
         <ClangPP/>
         <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="avr" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="no" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="-O0" Required="no">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="" IntermediateDirectory="./Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./Debug" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="yes" RemoteHostName="localhost" RemoteHostPort="1212" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="yes">
+        <RebuildCommand/>
+        <CleanCommand>make -f make/MakefileAVR.mk clean</CleanCommand>
+        <BuildCommand>make -f make/MakefileAVR.mk firmware</BuildCommand>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory>$(ProjectPath)../</WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths>$(ProjectPath)../avr-new</SearchPaths>
       </Completion>
     </Configuration>
     <Configuration Name="doc" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
@@ -170,7 +216,7 @@
         <CustomPostBuild/>
         <CustomPreBuild/>
       </AdditionalRules>
-      <Completion EnableCpp11="no">
+      <Completion EnableCpp11="no" EnableCpp14="no">
         <ClangCmpFlagsC/>
         <ClangCmpFlags/>
         <ClangPP/>
@@ -211,7 +257,7 @@
         <CustomPostBuild/>
         <CustomPreBuild/>
       </AdditionalRules>
-      <Completion EnableCpp11="no">
+      <Completion EnableCpp11="no" EnableCpp14="no">
         <ClangCmpFlagsC/>
         <ClangCmpFlags/>
         <ClangPP/>

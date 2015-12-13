@@ -1,6 +1,7 @@
+
 # paths
-sourceDir=./
-buildDir=.build
+sourceDir=$(PWD)/gpio
+buildDir=/tmp/si2c/gpio
 
 
 sources+=si2c.c
@@ -36,4 +37,7 @@ $(buildDir):
 $(buildDir)/%.o: $(sourceDir)/%.c $(buildDir)
 	$(GCC) $(CFLAGS) -c $< -o $@
 
+/usr/sbin/si2c: $(buildDir)/si2c
+	cp $< $@
+si2c: /usr/sbin/si2c
 

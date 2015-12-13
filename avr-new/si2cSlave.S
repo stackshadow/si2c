@@ -16,30 +16,34 @@
 ;
 ; This function wait until the bus is ready
 
-.global si2cWaitEnd
-si2cWaitEnd:
+#include <avr/io.h>
 
-	; Wait for high
-	rcall SCLWaitHigh
+#include "config.h"
+#include "si2cSlave.asmh"
 
-	; Check if SDA is High or Low
-	sbic SDA_ASM					; If SDA = 1
-	rjmp si2cWaitEndWaitSCLLow		; then jump
+; include other functions
+#include "watchdog/si2cWD.S"
 
-	si2cWaitEndWaitStop:
-	; SDA is low, wait that its getting high -> STOP
-		sbic SDA_ASM					; if SDA gets 1
-		rjmp si2cWaitEndFinish			; then jump
+; our i2c functions
+#include "si2cSetup.S"
+#include "si2cSlaveWaitForBus.S"
+#include "si2cSlaveReadByte.S"
+#include "si2cSlaveCheckAddress.S"
 
-	; SCL gets low ?
-		sbis SCL_ASM					; if SCL = 0
-		rjmp si2cWaitEnd				; then jump
-		rjmp si2cWaitEndWaitStop		; else jump
+.global si2cSlave
+si2cSlave:
+    rcall si2cSlaveWaitForBus
+    rcall si2cSlaveReadByte
+    
+    SET_ASM( PORT, D, 6 );
+    
+    ; okay, now we have an Address, check it
+    lds rParameter,si2cByte ; load byte
+    rcall si2cSlaveCheckAddress ; check Address
+    
+    cpi rReturnState, 1
+    brne _not
+    CLR_ASM( PORT, D, 6 );
+_not:
+    ret
 
-
-si2cWaitEndWaitSCLLow:
-	rcall SCLWaitLow			; wait that scl get low
-	rjmp si2cWaitEnd			; jump back
-
-si2cWaitEndFinish: 
-	ret

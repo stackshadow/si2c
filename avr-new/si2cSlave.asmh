@@ -1,0 +1,46 @@
+
+; #################################### from here, this is ASM-Stuff ####################################
+
+; Temporary registers
+; Some registers
+#define		rTemp1		r16
+#define		rTemp2		r17
+#define		rTemp3		r18
+
+
+; Function Registers
+#define		rParameter		r21
+#define		rReturnValue	r22
+#define		rReturnState	r23
+
+; Bits and Bytes
+.extern		si2cByte;
+.extern     si2cAddress;
+.extern     si2cStateRW;
+
+
+
+.extern		si2cRegisterIndex;
+
+// Functions
+.extern 	si2cSlaveReadRegister;
+.extern 	si2cSlaveWriteRegister;
+
+
+
+// #################################### some helper ####################################
+
+// For ASM
+#define		SET_ASM_(typ, port, bit) sbi _SFR_IO_ADDR( typ##port ), bit
+#define		SET_ASM(typ, port, bit) SET_ASM_(typ, port, bit)
+
+#define		CLR_ASM_(typ, port, bit) cbi _SFR_IO_ADDR( typ##port ), bit
+#define		CLR_ASM(typ, port, bit) CLR_ASM_(typ, port, bit)
+
+#define 	IS_ASM_( port, bit) _SFR_IO_ADDR( PIN##port ), bit
+#define 	IS_ASM( port, bit) IS_ASM_( port, bit) /**< Set a bit inside an register */
+
+#define		IS_SCL_ASM IS_ASM(confi2cSCLPort,confi2cSCLPin) /**< Checks if SCL is set */
+#define		IS_SDA_ASM IS_ASM(confi2cSDAPort,confi2cSDAPin) /**< Checks if SDA is set */
+
+

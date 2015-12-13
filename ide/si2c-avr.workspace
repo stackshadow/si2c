@@ -5,7 +5,7 @@
     <WorkspaceConfiguration Name="Debug" Selected="no">
       <Project Name="si2c-avr" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="gpio" Selected="yes">
+    <WorkspaceConfiguration Name="gpio" Selected="no">
       <Project Name="si2c-avr" ConfigName="gpio"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="UpLoad" Selected="no">
@@ -13,6 +13,9 @@
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="doc" Selected="no">
       <Project Name="si2c-avr" ConfigName="doc"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="avr" Selected="yes">
+      <Project Name="si2c-avr" ConfigName="avr"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

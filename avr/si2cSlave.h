@@ -1,4 +1,4 @@
-/* si2c - An software based i2c-library - Example file
+/* si2c - An software based i2c-library
 Copyright (C) 2015 by Martin Langlotz aka stackshadow < stackshadow at evilbrain dot de >
 
 This file is part of si2c

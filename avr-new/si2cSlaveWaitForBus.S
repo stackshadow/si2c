@@ -13,33 +13,22 @@
 ;
 ; You should have received a copy of the GNU Lesser General Public License
 ; along with si2c.  If not, see <http://www.gnu.org/licenses/>.
-;
-; This function wait until the bus is ready
-
-.global si2cWaitEnd
-si2cWaitEnd:
-
-	; Wait for high
-	rcall SCLWaitHigh
-
-	; Check if SDA is High or Low
-	sbic SDA_ASM					; If SDA = 1
-	rjmp si2cWaitEndWaitSCLLow		; then jump
-
-	si2cWaitEndWaitStop:
-	; SDA is low, wait that its getting high -> STOP
-		sbic SDA_ASM					; if SDA gets 1
-		rjmp si2cWaitEndFinish			; then jump
-
-	; SCL gets low ?
-		sbis SCL_ASM					; if SCL = 0
-		rjmp si2cWaitEnd				; then jump
-		rjmp si2cWaitEndWaitStop		; else jump
 
 
-si2cWaitEndWaitSCLLow:
-	rcall SCLWaitLow			; wait that scl get low
-	rjmp si2cWaitEnd			; jump back
+; ########################## wait for SDA/SCL low ##########################
+.global si2cSlaveWaitForBus
+si2cSlaveWaitForBus:
 
-si2cWaitEndFinish: 
-	ret
+si2cSlaveWaitForBusSDA:
+    sbic IS_SDA_ASM                                 ; if 1
+    rjmp si2cSlaveWaitForBusSDA                     ; then loop
+
+si2cSlaveWaitForBusSCL:
+    sbic IS_SCL_ASM                                 ; if 1
+    rjmp si2cSlaveWaitForBusSCL                     ; then end
+
+    CLR_ASM( PORT, D, 6 )                           ; ################## DEBUG
+
+; return
+    ret
+

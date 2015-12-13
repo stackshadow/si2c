@@ -16,30 +16,21 @@
 ;
 ; This function wait until the bus is ready
 
-.global si2cWaitEnd
-si2cWaitEnd:
 
-	; Wait for high
-	rcall SCLWaitHigh
+; ########################## Setup Hardware ##########################
+.global si2cSetup
+si2cSetup:
+; Disable Pull up ( just to be sure )
+	CLR_ASM( PORT, confi2cSCLPort, confi2cSCLPin );
+	CLR_ASM( PORT, confi2cSDAPort, confi2cSDAPin );
 
-	; Check if SDA is High or Low
-	sbic SDA_ASM					; If SDA = 1
-	rjmp si2cWaitEndWaitSCLLow		; then jump
+; Set Ports to input
+	CLR_ASM( DDR, confi2cSCLPort, confi2cSCLPin );
+	CLR_ASM( DDR, confi2cSDAPort, confi2cSDAPin );
+    
+; setup i2c
+    ldi rTemp1, confi2cAddress
+    sts si2cAddress,rTemp1
 
-	si2cWaitEndWaitStop:
-	; SDA is low, wait that its getting high -> STOP
-		sbic SDA_ASM					; if SDA gets 1
-		rjmp si2cWaitEndFinish			; then jump
+ret
 
-	; SCL gets low ?
-		sbis SCL_ASM					; if SCL = 0
-		rjmp si2cWaitEnd				; then jump
-		rjmp si2cWaitEndWaitStop		; else jump
-
-
-si2cWaitEndWaitSCLLow:
-	rcall SCLWaitLow			; wait that scl get low
-	rjmp si2cWaitEnd			; jump back
-
-si2cWaitEndFinish: 
-	ret

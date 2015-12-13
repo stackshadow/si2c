@@ -16,17 +16,32 @@ You should have received a copy of the GNU Lesser General Public License
 along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Some defines we need
-#define 	SET_(typ, port, bit) typ##port |= (1<<bit)
-#define 	SET(typ, port, bit) SET_(typ, port, bit) /**< Set a bit inside an register */
+/** 
+@defgroup si2cavr AVR-Library for software i2c
+@{
+	Software i2c for AVR's atmega
+@}
+*/
 
-#define 	CLR_(typ, port, bit) typ##port &= ~(1<<bit)
-#define 	CLR(typ, port, bit) CLR_(typ, port, bit) /**< Reset a bit inside an register */
 
-#define 	IS_( port, bit) ( PIN##port & (1<<bit) )
-#define 	IS( port, bit) IS_( port, bit) /**< Checks if an bit is set */
 
-// SDA / SCL
-#define		IS_SCL IS(CONF_SI2C_PORT,CONF_SI2C_CLK) /**< Checks if SCL is set */
-#define		IS_SDA IS(CONF_SI2C_PORT,CONF_SI2C_SDA) /**< Checks if SDA is set */
+// Bits and Bytes
+volatile unsigned char				si2cByte;
+volatile unsigned char				si2cAddress;
+volatile unsigned char				si2cStateRW;
+
+// Registers
+unsigned char						si2cRegister[10];
+volatile unsigned char				si2cRegisterIndex;
+
+
+/**
+@ingroup si2cavr
+@brief Setup io for i2c use
+This function disable the pullups of SDA and SCL pin and set these pins to output
+*/
+extern void si2cSetup();
+
+
+extern void si2cSlave();
 

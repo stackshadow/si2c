@@ -9,14 +9,12 @@ Software based I²C library ( I²C-Slave ) for AVR's atmega
 ## Features not finished yet
 * time-streching
 * software i2c-master for avr's atmega
+* software watchdog ( please use the watchdog of your atmega )
 
 
 ## That works
 * read and write from raspberry to atmega8 over pins you can choose ;)
 * use speeds at your own choise
-
-## Need to be tested
-* use of interrupt
 
 
 ## How to start
@@ -29,19 +27,18 @@ Software based I²C library ( I²C-Slave ) for AVR's atmega
 
 ### On AVR's site
 #### Setup
-Please change the variables inside si2cConfig.h in the avr/ folder
+Please change the variables inside config.h in the avr/ folder
 #### build
-* change to directory avr
-* run make
-* upload the firmware to your atmega ;)
+* change to source-directory
+* run make -f make/MakefileAVR.mk firmware
+
 
 ### Raspberry
-#### Setup
-Use the function si2cMasterSetup() to change pins ( or the "-c" option from command line )
 #### build
-* change to directory gpio
-* run make
-#### usage
+* change to source-directory
+* run make -f make/MakefileGPIO.mk si2c
+
+#### Command line interface
 ```
 Usage:
 -c <SDA-Port> <SCL-Port> <TIME>
@@ -54,3 +51,14 @@ Usage:
 -e: Send i2c-stop
 -t <chipAddress>: Test if address is present
 ```
+
+For example, if you would like to send an byte
+```
+si2c -c 17 27 1 -i -s -as 4 -w 1 -w 1
+```
+- this will send byte 1 to register 1
+- the target chip Address is 4
+- SDA-Pin is GPIO 17
+- SCL-Pin is GPIO 27
+
+
