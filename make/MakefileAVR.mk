@@ -1,7 +1,7 @@
 
 # paths
 sourceDir=$(PWD)/avr-new
-buildDir=/tmp/i2c
+buildDir=/tmp/si2c
 
 # Progs
 GCC=gcc
@@ -18,7 +18,7 @@ endif
 # files
 sources += si2cSlave.c
 sources += firmwareTest.c
-sourcesASM += si2cSlave.S
+sourcesASM += asm/si2cSlave.S
 
 # This is needed by si2c-library
 CPU=atmega8
@@ -27,13 +27,12 @@ F_CPU=8000000UL
 
 
 
-sourcesFull=$(addprefix $(sourceDir)/,$(objects))
 objects=$(sources:.c=.o)
-objectsFull=$(addprefix $(buildDir)/,$(objects))
 objectsASM=$(sourcesASM:.S=.asmo)
+
+sourcesFull=$(addprefix $(sourceDir)/,$(sources))
+objectsFull=$(addprefix $(buildDir)/,$(objects))
 objectsASMFull=$(addprefix $(buildDir)/,$(objectsASM))
-
-
 
 
 
@@ -42,6 +41,7 @@ objectsASMFull=$(addprefix $(buildDir)/,$(objectsASM))
 # Objects
 $(buildDir)/%.o: $(sourceDir)/%.c
 	@echo "CC $<"
+	@$(MKDIR) $$(dirname $@)
 	@avr-gcc -g -Os -Wall -mmcu=$(CPU) -DF_CPU=$(F_CPU) $(CFLAGS) \
 	-c $< -o $@
 #	avr-gcc -g -S -fverbose-asm -Wall -mmcu=$(CPU) -DF_CPU=$(F_CPU) $(CFLAGS) \
@@ -49,14 +49,15 @@ $(buildDir)/%.o: $(sourceDir)/%.c
 
 $(buildDir)/%.asmo: $(sourceDir)/%.S
 	@echo "ASM $<"
-	@avr-gcc -g -Wall -mmcu=$(CPU) -DF_CPU=$(F_CPU) $(CFLAGS) \
+	@$(MKDIR) $$(dirname $@)
+	avr-gcc -g -Os -Wall -mmcu=$(CPU) -DF_CPU=$(F_CPU) $(CFLAGS) \
 	-c $< -o $@
 
 $(buildDir):
 	mkdir -p $(buildDir)
 
-$(buildDir)/firmware.hex: $(buildDir) $(objectsFull) $(objectsASMFull)
-	avr-gcc -g -mmcu=$(CPU) $(objectsFull) $(objectsASMFull) -o $(buildDir)/firmware.elf
+$(buildDir)/firmware.hex: $(objectsFull) $(objectsASMFull)
+	avr-gcc -g -Os -mmcu=$(CPU) $(objectsFull) $(objectsASMFull) -o $(buildDir)/firmware.elf
 	avr-objcopy -j .text -j .data -O ihex $(buildDir)/firmware.elf $@
 
 firmware: $(buildDir)/firmware.hex
@@ -66,7 +67,6 @@ clean:
 	@$(RM) $(objectsASMFull)
 	@$(RM) $(buildDir)/firmware.elf
 	@$(RM) $(buildDir)/firmware.hex
-	@$(RM) $(buildDir)/*.asm
 
 simulation:
 	simulavr -g -P simulavr-disp -d atmega8 $(buildDir)/firmware.elf &
