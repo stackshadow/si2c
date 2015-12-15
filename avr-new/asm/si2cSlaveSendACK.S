@@ -18,26 +18,26 @@
 .global si2cSlaveACK
 si2cSlaveACK:
 
-; Address match, send ACK
-	SET_ASM( DDR, CONF_SI2C_PORT, CONF_SI2C_SDA )
-	nop
+; set SDA to output ( default is low )
+   	SET_ASM( DDR, confi2cSDAPort, confi2cSDAPin );
 
-; wait for scl impulse
-	rcall SCLWaitHigh
-	rcall SCLWaitLow
+; ################## wait for SCL high ##################
+si2cSlaveACK001:
+    sbic IS_SCL_ASM                     ; if 1
+    rjmp si2cSlaveACK002                ; then
+    rjmp si2cSlaveACK001                ; else
 
-; Switch back
-	CLR_ASM( DDR, CONF_SI2C_PORT, CONF_SI2C_SDA )
-	nop
+
+
+; ################## wait for SCL low ##################
+si2cSlaveACK002:
+    sbis IS_SCL_ASM                     ; if 0
+    rjmp si2cSlaveACK003                ; then
+    rjmp si2cSlaveACK002                ; else
+
+si2cSlaveACK003:
+; set SDA to input
+   	CLR_ASM( DDR, confi2cSDAPort, confi2cSDAPin );
+
 ; return
 	ret
-
-
-.global si2cSlaveNACK
-si2cSlaveNACK:
-; wait for scl impulse
-	rcall SCLWaitHigh
-	rcall SCLWaitLow
-; return
-	ret
-

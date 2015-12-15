@@ -40,10 +40,7 @@
   <VirtualDirectory Name="avr-new">
     <File Name="../avr-new/config.h"/>
     <File Name="../avr-new/si2cSlave.h"/>
-    <File Name="../avr-new/si2cSlave.asmh"/>
     <File Name="../avr-new/makros.h"/>
-    <File Name="../avr-new/si2cSlave.S"/>
-    <File Name="../avr-new/si2cSetup.S"/>
     <File Name="../avr-new/firmwareTest.c"/>
     <File Name="../avr-new/si2cSlave.c"/>
     <VirtualDirectory Name="watchdog">
@@ -51,9 +48,16 @@
       <File Name="../avr-new/watchdog/si2cWD.c"/>
       <File Name="../avr-new/watchdog/si2cWD.h"/>
     </VirtualDirectory>
-    <File Name="../avr-new/si2cSlaveReadByte.S"/>
-    <File Name="../avr-new/si2cSlaveWaitForBus.S"/>
-    <File Name="../avr-new/si2cSlaveCheckAddress.S"/>
+    <VirtualDirectory Name="asm">
+      <File Name="../avr-new/asm/si2cSetup.S"/>
+      <File Name="../avr-new/asm/si2cSlave.S"/>
+      <File Name="../avr-new/asm/si2cSlave.asmh"/>
+      <File Name="../avr-new/asm/si2cSlaveCheckAddress.S"/>
+      <File Name="../avr-new/asm/si2cSlaveReadByte.S"/>
+      <File Name="../avr-new/asm/si2cSlaveWaitForBus.S"/>
+      <File Name="../avr-new/asm/si2cSlaveSendACK.S"/>
+      <File Name="../avr-new/asm/si2cSlaveSendNACK.S"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

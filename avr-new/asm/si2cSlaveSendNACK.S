@@ -15,29 +15,24 @@
 ; along with si2c.  If not, see <http://www.gnu.org/licenses/>.
 
 
-.global si2cSlaveACK
-si2cSlaveACK:
-
-; Address match, send ACK
-	SET_ASM( DDR, CONF_SI2C_PORT, CONF_SI2C_SDA )
-	nop
-
-; wait for scl impulse
-	rcall SCLWaitHigh
-	rcall SCLWaitLow
-
-; Switch back
-	CLR_ASM( DDR, CONF_SI2C_PORT, CONF_SI2C_SDA )
-	nop
-; return
-	ret
-
-
 .global si2cSlaveNACK
 si2cSlaveNACK:
-; wait for scl impulse
-	rcall SCLWaitHigh
-	rcall SCLWaitLow
+
+
+; ################## wait for SCL high ##################
+si2cSlaveNACK001:
+    sbic IS_SCL_ASM                     ; if 1
+    rjmp si2cSlaveNACK002               ; then
+    rjmp si2cSlaveNACK001               ; else
+
+
+
+; ################## wait for SCL low ##################
+si2cSlaveNACK002:
+    sbis IS_SCL_ASM                     ; if 0
+    rjmp si2cSlaveNACK003               ; then
+    rjmp si2cSlaveNACK002               ; else
+
+si2cSlaveNACK003:
 ; return
 	ret
-
