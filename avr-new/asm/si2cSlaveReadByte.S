@@ -22,28 +22,25 @@ si2cSlaveRB002:
 ; ################## wait for SCL low ##################
 si2cSlaveRB003:
     sbis IS_SCL_ASM                     ; if 0
+    rjmp si2cSlaveRBNext                ; then
+
+
+; from here we must check if SDA changes
+    sbic IS_SDA_ASM                     ; if 1
     rjmp si2cSlaveRB004                 ; then
+    rjmp si2cSlaveRB005                 ; else
+
+; SDA is now 1
+si2cSlaveRB004:
+    sbrs rTemp1, 0                      ; if 0 ( SDA was low before )
+    rjmp si2cSlaveRBStop                ; then
     rjmp si2cSlaveRB003                 ; else
 
-si2cSlaveRB004:
-; we need to read sda again, to check if we get an stop-condition
-    sbic IS_SDA_ASM                     ; if 1
-    rjmp si2cSlaveRB005                 ; then
-    rjmp si2cSlaveRB006                 ; else
-
-; ################## check start/stop ##################
-; 1
+; SDA is now 0
 si2cSlaveRB005:
-    sbrc rTemp1, 0                      ; if 1
-    rjmp si2cSlaveRBNext                ; then
-    rjmp si2cSlaveRBStop                ; else
-
-; 0
-si2cSlaveRB006:
-    sbrs rTemp1, 0                      ; if 0
-    rjmp si2cSlaveRBNext                ; then
-    rjmp si2cSlaveRBRestart             ; else
-
+    sbrc rTemp1, 0                      ; if 1 ( SDA was high before )
+    rjmp si2cSlaveRBRestart             ; then
+    rjmp si2cSlaveRB003                 ; else
 
 
 si2cSlaveRBNext:
