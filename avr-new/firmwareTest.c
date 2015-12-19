@@ -54,6 +54,13 @@ void 				si2cShowByte( unsigned char byte ){
 	SET( PORT, statusLEDPort, statusLEDPin );
 }
 
+void				si2cSlaveReadRegister(){
+   _delay_ms(1000);
+    si2cShowByte( si2cByte );
+}
+
+
+
 int main (){
 
 // setup pin
@@ -72,8 +79,6 @@ int main (){
 
     while(1){
         si2cSlave();
-        _delay_ms(1000);
-        si2cShowByte( si2cByte );
     }
     return 0;
 }

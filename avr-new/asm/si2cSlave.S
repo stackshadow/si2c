@@ -34,11 +34,22 @@
 
 .global si2cSlave
 si2cSlave:
+    SET_ASM( PORT, D, 6 )                           ; ################## DEBUG
+    SET_ASM( PORT, D, 7 )                           ; ################## DEBUG
+
+
     rcall si2cSlaveWaitForBus
+
+    CLR_ASM( PORT, D, 6 )                           ; ################## DEBUG
+
+
     rcall si2cSlaveReadByte
-    
-    SET_ASM( PORT, D, 6 );
-    
+    cpi rReturnState, 3                         ; stop occure
+    breq si2cSlaveEnd
+    cpi rReturnState, 2                         ; restart occure
+    breq si2cSlave
+
+
     ; okay, now we have an Address, check it
     lds rParameter,si2cByte                     ; load byte
     rcall si2cSlaveCheckAddress                 ; check Address
@@ -47,11 +58,21 @@ si2cSlave:
     rcall si2cSlaveNACK
     ret
 ack:
-    CLR_ASM( PORT, D, 6 );
+    CLR_ASM( PORT, D, 7 );
     rcall si2cSlaveACK
 
     rcall si2cSlaveReadByte
+    cpi rReturnState, 3                         ; stop occure
+    breq si2cSlaveEnd
+    cpi rReturnState, 2                         ; restart occure
+    breq si2cSlave
 
+    rcall si2cSlaveACK
+    
+    rcall si2cSlaveReadRegister
 
+si2cSlaveEnd:
+    SET_ASM( PORT, D, 6 )                           ; ################## DEBUG
+    SET_ASM( PORT, D, 7 )                           ; ################## DEBUG
     ret
 

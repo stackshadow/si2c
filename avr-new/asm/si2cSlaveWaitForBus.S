@@ -27,7 +27,6 @@ si2cSlaveWaitForBusSCL:
     sbic IS_SCL_ASM                                 ; if 1
     rjmp si2cSlaveWaitForBusSCL                     ; then end
 
-    CLR_ASM( PORT, D, 6 )                           ; ################## DEBUG
 
 ; return
     ret
